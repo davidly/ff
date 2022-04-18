@@ -1,0 +1,10 @@
+obj\*
+ff.obj
+ff.exe
+ff.pdb
+ff.res
+vc140.pdb
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/c_cpp_properties.json
+csharp/obj/*
