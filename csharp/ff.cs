@@ -158,6 +158,7 @@ class FindFiles
             Usage( "filespec is null" );
 
         if ( null == root )
+        {
 #if _WINDOWS
             root = @"\";
 #else
@@ -165,6 +166,7 @@ class FindFiles
             if ( null == root )
                 root = @"/";
 #endif
+        }
 
         root = Path.GetFullPath( root );
 
