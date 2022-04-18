@@ -41,3 +41,6 @@ Note that the m.sh script copies the binary ff to ~/bin then code-signs it using
     cp ff ~/bin/ff
     # have to re-sign in the target folder or it won't be trusted by MacOS
     codesign -f -s - ~/bin/ff
+    
+Also tested on Linux. In m.sh, change osx.12-arm64 to linux-x64 to generate a binary for that platform.
+
