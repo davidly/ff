@@ -1,5 +1,5 @@
 # ff
-Find File. Windows command line app to find files on a drive.
+Find File. Windows command line app to find files on a drive. (MacOS-compatible C# version below)
 
 Build using a Visual Studio 64 bit command prompt using m.bat
 
@@ -30,3 +30,17 @@ Usage:
             s: system
             S: sparse
             v: virtual
+
+The csharp folder has an implementation in C# that runs on MacOS and Windows. It's about 25% slower than the C++ version on Windows.
+To build on Windows using .net 6, use m.bat
+To build on MacOS using .net 6, use m.sh
+
+Note that the m.sh script copies the binary ff to ~/bin then code-signs it using a blank signature so it can run locally in that folder:
+
+    dotnet publish ff.csproj --configuration Release -r osx.12-arm64 -f net6.0 -p:UseAppHost=true --self-contained false -p:PublishSingleFile=true -p:PublishReadyToRun=true -p:PublishTrimmed=false -o ./ -nologo
+    cp ff ~/bin/ff
+    # have to re-sign in the target folder or it won't be trusted by MacOS
+    codesign -f -s - ~/bin/ff
+    
+Also tested on Linux. In m.sh, change osx.12-arm64 to linux-x64 to generate a binary for that platform.
+
