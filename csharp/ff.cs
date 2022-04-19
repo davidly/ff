@@ -108,10 +108,12 @@ class FindFiles
     static void Find( DirectoryInfo diRoot, string spec, bool showAttributes, ParallelOptions po )
     {
         // On Windows NTFS, ReparsePoints are skipped by EnumerateDirectories.
-        // On MacOS, they aren't. This check is redundant on Windows
+        // On MacOS and Linux, they aren't.
 
+#if !_WINDOWS
         if ( 0 != ( diRoot.Attributes & FileAttributes.ReparsePoint ) )
             return;
+#endif
  
         try
         {
@@ -132,7 +134,15 @@ class FindFiles
             {
                 DisplayInfo( subDir, 0, showAttributes );
             });
+        }
+        catch (Exception ex)
+        {
+            // Some folders are locked-down, and can't be enumerated
+            // Console.Error.WriteLine(ex);
+        }
 
+        try
+        {
             Parallel.ForEach( diRoot.EnumerateFiles( spec ), po, ( fileInfo ) =>
             {
                 DisplayInfo( fileInfo, fileInfo.Length, showAttributes );
