@@ -117,7 +117,6 @@ class FindFiles
         {
             Parallel.ForEach( diRoot.EnumerateDirectories(), po, ( subDir ) =>
             {
-                DisplayInfo( subDir, 0, showAttributes );
                 Find( subDir, spec, showAttributes, po );
             });
         }
@@ -129,6 +128,11 @@ class FindFiles
 
         try
         {
+            Parallel.ForEach( diRoot.EnumerateDirectories( spec ), po, ( subDir ) =>
+            {
+                DisplayInfo( subDir, 0, showAttributes );
+            });
+
             Parallel.ForEach( diRoot.EnumerateFiles( spec ), po, ( fileInfo ) =>
             {
                 DisplayInfo( fileInfo, fileInfo.Length, showAttributes );
