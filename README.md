@@ -13,24 +13,30 @@ Usage:
                      [filespec]      File(s) to look for
         examples:    ff -a c:\pictures *.jpg
                      ff -s -a c:\pictures *.jpg
-                     ff slothrust.jpgattributes:
+                     ff slothrust.jpg
+        attributes:
             a: archive
             c: compressed
             d: directory
+            D: device
             e: encrypted
             h: hidden
             i: not content indexed
             I: integrity stream
             n: normal
+            N: no scrub data
             o: offline
             O: recall on open
             p: reparse point
+            P: pinned
             r: read only
             R: recall on data access (OneDrive placeholder)
             s: system
             S: sparse
+            t: temporary
+            u: unpinned
             v: virtual
-
+        
 The csharp folder has an implementation in C# that runs on MacOS and Windows. It's about 25% slower than the C++ version on Windows.
 To build on Windows using .net 6, use m.bat
 To build on MacOS using .net 6, use m.sh
