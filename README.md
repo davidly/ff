@@ -37,16 +37,17 @@ Usage:
             u: unpinned
             v: virtual
         
-The csharp folder has an implementation in C# that runs on MacOS and Windows. It's about 25% slower than the C++ version on Windows.
+The csharp folder has an implementation in C# that runs on MacOS, Linux and Windows. It's about 25% slower than the C++ version on Windows.
 To build on Windows using .net 6, use m.bat
 To build on MacOS using .net 6, use m.sh
+To build on Linux using .net 6, use m-linux.sh
 
-Note that the m.sh script copies the binary ff to ~/bin then code-signs it using a blank signature so it can run locally in that folder:
+Note that the m.sh script copies the binary ff to ~/bin then code-signs it using a blank signature so it can run locally in that folder. That's required on M1 macs.
 
     dotnet publish ff.csproj --configuration Release -r osx.12-arm64 -f net6.0 -p:UseAppHost=true --self-contained false -p:PublishSingleFile=true -p:PublishReadyToRun=true -p:PublishTrimmed=false -o ./ -nologo
     cp ff ~/bin/ff
     # have to re-sign in the target folder or it won't be trusted by MacOS
     codesign -f -s - ~/bin/ff
     
-Also tested on Linux. In m.sh, change osx.12-arm64 to linux-x64 to generate a binary for that platform.
+On Linux on WSL, many file attributes are stripped away, whereas on MacOS many attributes are available.
 
