@@ -27,19 +27,23 @@ void PrintAttrib( DWORD a )
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_ARCHIVE ) ) ? 'a' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_COMPRESSED ) ) ? 'c' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_DIRECTORY ) ) ? 'd' : ' ' );
+    putchar( ( 0 != ( a & FILE_ATTRIBUTE_DEVICE ) ) ? 'D' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_ENCRYPTED ) ) ? 'e' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_HIDDEN ) ) ? 'h' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_NOT_CONTENT_INDEXED ) ) ? 'i' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_INTEGRITY_STREAM ) ) ? 'I' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_NORMAL ) ) ? 'n' : ' ' );
+    putchar( ( 0 != ( a & FILE_ATTRIBUTE_NO_SCRUB_DATA ) ) ? 'N' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_OFFLINE ) ) ? 'o' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_RECALL_ON_OPEN ) ) ? 'O' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_REPARSE_POINT ) ) ? 'p' : ' ' );
+    putchar( ( 0 != ( a & FILE_ATTRIBUTE_PINNED ) ) ? 'P' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_READONLY ) ) ? 'r' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS ) ) ? 'R' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_SYSTEM ) ) ? 's' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_SPARSE_FILE ) ) ? 'S' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_TEMPORARY ) ) ? 't' : ' ' );
+    putchar( ( 0 != ( a & FILE_ATTRIBUTE_UNPINNED ) ) ? 'u' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_VIRTUAL ) ) ? 'v' : ' ' );
 } //PrintAttrib
 
@@ -198,23 +202,28 @@ void Usage( WCHAR *pwcApp )
     wprintf( L"                 [filespec]      File(s) to look for\n" );
     wprintf( L"    examples:    ff -a c:\\pictures *.jpg\n" );
     wprintf( L"                 ff -s -a c:\\pictures *.jpg\n" );
-    wprintf( L"                 ff slothrust.jpg" );
-    wprintf( L"attributes:\n" );
+    wprintf( L"                 ff slothrust.jpg\n" );
+    wprintf( L"    attributes:\n" );
     wprintf( L"        a: archive\n" );
     wprintf( L"        c: compressed\n" );
     wprintf( L"        d: directory\n" );
+    wprintf( L"        D: device\n" );
     wprintf( L"        e: encrypted\n" );
     wprintf( L"        h: hidden\n" );
     wprintf( L"        i: not content indexed\n" );
     wprintf( L"        I: integrity stream\n" );
     wprintf( L"        n: normal\n" );
+    wprintf( L"        N: no scrub data\n" );
     wprintf( L"        o: offline\n" );
     wprintf( L"        O: recall on open\n" );
     wprintf( L"        p: reparse point\n" );
+    wprintf( L"        P: pinned\n" );
     wprintf( L"        r: read only\n" );
     wprintf( L"        R: recall on data access (OneDrive placeholder)\n" );
     wprintf( L"        s: system\n" );
     wprintf( L"        S: sparse\n" ); 
+    wprintf( L"        t: temporary\n" ); 
+    wprintf( L"        u: unpinned\n" );
     wprintf( L"        v: virtual\n" );
     exit( 1 );
 } //Usage

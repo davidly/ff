@@ -30,16 +30,28 @@ class FindFiles
         Console.WriteLine( @"  (MacOS):    ff \*.cs" );
         Console.WriteLine( @"              ff -a ~ \*.jpg" );
         Console.WriteLine( @"              ff -a ~/Documents \*.jpg" );
-        Console.WriteLine( @"  attributes: r    readonly" );
-        Console.WriteLine( @"              h    hidden" );
-        Console.WriteLine( @"              e    encrypted" );
-        Console.WriteLine( @"              s    system" );
-        Console.WriteLine( @"              o    offline" );
-        Console.WriteLine( @"              p    sparse" );
-        Console.WriteLine( @"              d    directory" );
-        Console.WriteLine( @"              c    compressed" );
-        Console.WriteLine( @"              i    not content indexed" );
-        Console.WriteLine( @"              a    reparse point" );
+        Console.WriteLine( @"  attributes:" );
+        Console.WriteLine( @"        a: archive" );
+        Console.WriteLine( @"        c: compressed" );
+        Console.WriteLine( @"        d: directory" );
+        Console.WriteLine( @"        D: device" );
+        Console.WriteLine( @"        e: encrypted" );
+        Console.WriteLine( @"        h: hidden" );
+        Console.WriteLine( @"        i: not content indexed" );
+        Console.WriteLine( @"        I: integrity stream" );
+        Console.WriteLine( @"        n: normal" );
+        Console.WriteLine( @"        N: no scrub data" );
+        Console.WriteLine( @"        o: offline" );
+        Console.WriteLine( @"        O: recall on open" );
+        Console.WriteLine( @"        p: reparse point" );
+        Console.WriteLine( @"        P: pinned" );
+        Console.WriteLine( @"        r: read only" );
+        Console.WriteLine( @"        R: recall on data access (OneDrive placeholder)" );
+        Console.WriteLine( @"        s: system" );
+        Console.WriteLine( @"        S: sparse" ); 
+        Console.WriteLine( @"        t: temporary" );
+        Console.WriteLine( @"        u: unpinned" );
+        Console.WriteLine( @"        v: virtual" );
 
         Environment.Exit( 1 );
     } //Usage
@@ -49,17 +61,29 @@ class FindFiles
     static void DisplayAttributes( FileInfo fi )
     {
         FileAttributes a = fi.Attributes;
+        uint x = (uint) a;
     
-        Console.Write( ( 0 != ( a & FileAttributes.ReadOnly ) )          ? "r" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.Hidden ) )            ? "h" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.Encrypted ) )         ? "e" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.System ) )            ? "s" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.Offline ) )           ? "o" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.SparseFile ) )        ? "p" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.Directory ) )         ? "d" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Archive ) )           ? "a" : " " );
         Console.Write( ( 0 != ( a & FileAttributes.Compressed ) )        ? "c" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Directory ) )         ? "d" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Device ) )            ? "D" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Encrypted ) )         ? "e" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Hidden ) )            ? "h" : " " );
         Console.Write( ( 0 != ( a & FileAttributes.NotContentIndexed ) ) ? "i" : " " );
-        Console.Write( ( 0 != ( a & FileAttributes.ReparsePoint ) )      ? "a" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.IntegrityStream ) )   ? "I" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Normal ) )            ? "n" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.NoScrubData ) )       ? "N" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Offline ) )           ? "o" : " " );
+        Console.Write( ( 0 != ( x & 0x00040000 ) )                       ? "O" : " " ); // FILE_ATTRIBUTE_RECALL_ON_OPEN
+        Console.Write( ( 0 != ( a & FileAttributes.ReparsePoint ) )      ? "p" : " " );
+        Console.Write( ( 0 != ( x & 0x00080000 ) )                       ? "P" : " " ); // FILE_ATTRIBUTE_PINNED
+        Console.Write( ( 0 != ( a & FileAttributes.ReadOnly ) )          ? "r" : " " );
+        Console.Write( ( 0 != ( x & 0x00400000 ) )                       ? "R" : " " ); // FILE_ATTRIBUTE_RECALL_ON_DATA_ACCESS
+        Console.Write( ( 0 != ( a & FileAttributes.System ) )            ? "s" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.SparseFile ) )        ? "S" : " " );
+        Console.Write( ( 0 != ( a & FileAttributes.Temporary ) )         ? "t" : " " );
+        Console.Write( ( 0 != ( x & 0x00100000 ) )                       ? "u" : " " ); // FILE_ATTRIBUTE_UNPINNED
+        Console.Write( ( 0 != ( x & 0x00010000 ) )                       ? "v" : " " ); // FILE_ATTRIBUTE_VIRTUAL
     
         Console.Write( " {0,14:N0}  ", fi.Length );
         Console.Write( " {0:MM/dd/yy HH:mm:ss}  ", fi.LastWriteTime );
