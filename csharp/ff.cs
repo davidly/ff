@@ -58,7 +58,7 @@ class FindFiles
 
     static object lockObj = new object();
 
-    static void DisplayAttributes( FileInfo fi )
+    static void DisplayAttributes( FileSystemInfo fi, Int64 length )
     {
         FileAttributes a = fi.Attributes;
         uint x = (uint) a;
@@ -84,12 +84,28 @@ class FindFiles
         Console.Write( ( 0 != ( a & FileAttributes.Temporary ) )         ? "t" : " " );
         Console.Write( ( 0 != ( x & 0x00100000 ) )                       ? "u" : " " ); // FILE_ATTRIBUTE_UNPINNED
         Console.Write( ( 0 != ( x & 0x00010000 ) )                       ? "v" : " " ); // FILE_ATTRIBUTE_VIRTUAL
-    
-        Console.Write( " {0,14:N0}  ", fi.Length );
+
+        Console.Write( " {0,14:N0}  ", length );
         Console.Write( " {0:MM/dd/yy HH:mm:ss}  ", fi.LastWriteTime );
     } //DisplayAttributes
 
-    static void Find( DirectoryInfo diRoot, string spec, bool attributes, ParallelOptions po )
+    static void DisplayInfo( FileSystemInfo fi, Int64 length, bool showAttributes )
+    {
+        lock ( lockObj )
+        {
+            if ( showAttributes )
+                DisplayAttributes( fi, length );
+        
+            Console.WriteLine( "{0}",
+                               #if _WINDOWS
+                                   fi.FullName.ToLower() );
+                               #else
+                                   fi.FullName );
+                               #endif
+        }
+    } //DisplayInfo
+
+    static void Find( DirectoryInfo diRoot, string spec, bool showAttributes, ParallelOptions po )
     {
         // On Windows NTFS, ReparsePoints are skipped by EnumerateDirectories.
         // On MacOS, they aren't. This check is redundant on Windows
@@ -101,7 +117,8 @@ class FindFiles
         {
             Parallel.ForEach( diRoot.EnumerateDirectories(), po, ( subDir ) =>
             {
-                Find( subDir, spec, attributes, po );
+                DisplayInfo( subDir, 0, showAttributes );
+                Find( subDir, spec, showAttributes, po );
             });
         }
         catch (Exception ex)
@@ -114,18 +131,7 @@ class FindFiles
         {
             Parallel.ForEach( diRoot.EnumerateFiles( spec ), po, ( fileInfo ) =>
             {
-                lock ( lockObj )
-                {
-                    if ( attributes )
-                        DisplayAttributes( fileInfo );
-    
-                    Console.WriteLine( "{0}",
-#if _WINDOWS
-                                       fileInfo.FullName.ToLower() );
-#else
-                                       fileInfo.FullName );
-#endif
-                }
+                DisplayInfo( fileInfo, fileInfo.Length, showAttributes );
             });
         }
         catch (Exception ex)
@@ -142,8 +148,8 @@ class FindFiles
 
         string root = null;
         string filespec = null;
-        bool attributes = false;
-        bool singlethreaded = false;
+        bool showAttributes = false;
+        bool singleThreaded = false;
 
         for ( int i = 0; i < args.Length; i++ )
         {
@@ -158,9 +164,9 @@ class FindFiles
                 char c = argUpper[1];
 
                 if ( 'A' == c )
-                    attributes = true;
+                    showAttributes = true;
                 else if ( 'S' == c )
-                    singlethreaded = true;
+                    singleThreaded = true;
                 else
                     Usage( "argument isn't -a or -s, so it's unrecognized" );
             }
@@ -195,9 +201,9 @@ class FindFiles
         root = Path.GetFullPath( root );
 
         DirectoryInfo diRoot = new DirectoryInfo( root );
-        ParallelOptions po = new ParallelOptions { MaxDegreeOfParallelism = singlethreaded ? 1 : -1 };
+        ParallelOptions po = new ParallelOptions { MaxDegreeOfParallelism = singleThreaded ? 1 : -1 };
 
-        Find( diRoot, filespec, attributes, po );
+        Find( diRoot, filespec, showAttributes, po );
     } //Main
 } //FindFiles
 
