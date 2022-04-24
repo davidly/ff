@@ -37,7 +37,7 @@ Usage:
             u: unpinned
             v: virtual
         
-The csharp folder has an implementation in C# that runs on MacOS, Linux and Windows. It's about 25% slower than the C++ version on Windows.
+The csharp folder has an implementation in C# that runs on MacOS, Linux, and Windows. It's about 25% slower than the C++ version on Windows.
 To build on Windows using .net 6, use m.bat
 To build on MacOS using .net 6, use m.sh
 To build on Linux using .net 6, use m-linux.sh
