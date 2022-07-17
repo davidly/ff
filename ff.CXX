@@ -21,6 +21,7 @@ std::mutex mtxGlobal;
 bool singleThreaded = FALSE;
 bool showAttributes = FALSE;
 bool loudMode = FALSE;
+HANDLE hConsole = INVALID_HANDLE_VALUE;
 
 void PrintAttrib( DWORD a )
 {
@@ -46,26 +47,6 @@ void PrintAttrib( DWORD a )
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_UNPINNED ) ) ? 'u' : ' ' );
     putchar( ( 0 != ( a & FILE_ATTRIBUTE_VIRTUAL ) ) ? 'v' : ' ' );
 } //PrintAttrib
-
-void RemoveUnprintableChars( WCHAR * pfile )
-{
-    // bug discoverred with Gracie Abrams' i miss you, i'm sorry.mp3.
-    // change fancy quote chars to normal onces so printf doesn't choke.
-
-    while ( *pfile )
-    {
-        if ( 0x2019 == *pfile )
-            * pfile = '\'';
-        else if ( 0x2018 == *pfile )
-            * pfile = '\'';
-        else if ( 0x201d == *pfile )
-            * pfile = '"';
-        else if ( 0x201c == *pfile )
-            * pfile = '"';
-
-        pfile++;
-    }
-} //RemoveUnprintableChars
 
 void DoScope( WCHAR const * pwcPath, WCHAR const * pwcSpec )
 {
@@ -134,10 +115,14 @@ void DoScope( WCHAR const * pwcPath, WCHAR const * pwcSpec )
                             (DWORD) st.wMinute,
                             pm ? 'p' : 'a');
                 }
-    
-                RemoveUnprintableChars( fd.cFileName );
+
+                // Use WriteConsole so characters like left and right quote and double quote work properly
+                // printf/puts and wide character variants either truncate the string (narrow) or emit question marks (wide).
+
                 _wcslwr( fd.cFileName );
-                printf( "%ws%ws\n", awcCurDir, fd.cFileName );
+                WriteConsole( hConsole, awcCurDir, wcslen( awcCurDir ), 0, 0 );
+                WriteConsole( hConsole, fd.cFileName, wcslen( fd.cFileName ), 0, 0 );
+                printf( "\n" );
             }
         } while ( FindNextFile( hFile, &fd ) );
 
@@ -317,6 +302,8 @@ extern "C" int __cdecl wmain( int argc, WCHAR * argv[] )
     
             iArg++;
         }
+
+        hConsole = GetStdHandle( STD_OUTPUT_HANDLE );
     
         WCHAR awcFullPath[ MAX_PATH ];
         awcFullPath[0] = 0;
