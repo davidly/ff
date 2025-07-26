@@ -1,5 +1,5 @@
 # ff
-Find File. Windows command line app to find files on a drive. (MacOS-compatible C# version below)
+Find File. Windows command line app to find files on a drive. Also, a MacOS-compatible C# version and a Linux-compatible C version. 
 
 Build using a Visual Studio 64 bit command prompt using m.bat
 
@@ -50,4 +50,6 @@ Note that the m.sh script copies the binary ff to ~/bin then code-signs it using
     codesign -f -s - ~/bin/ff
     
 On Linux on WSL, many file attributes are stripped away, whereas on MacOS many attributes are available.
+
+The Linux folder has a C version of the app.
 
